@@ -8,7 +8,6 @@
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python main.py
 ```
 
 Для Windows PowerShell замість перших двох команд використовуйте py -m venv .venv та .\.venv\Scripts\Activate.ps1.
@@ -80,7 +79,7 @@ git pull --ff-only origin main
 
 ### 8. Правила команди
 - Заборонено push безпосередньо в main та самостійний merge PR.
-- Перед початком роботи синхронізуйте свою гілку з main; наприкінці сеансу робіть commit і push.
+- Перед початком роботи синхронізуйте свою гілку з main; наприкінці роботи робіть commit і push.
 - Не редагуйте чужі файли без попереднього узгодження.
 - Пишіть зрозумілі повідомлення комітів
 - Дотримуйтеся PEP 8, перевіряйте некоректне введення та збереження даних.
