@@ -233,7 +233,8 @@ def change_address(args, book):
     if len(args) < 2:
         raise ValueError(Fore.RED + "Usage: change-address [name] [new address]")
 
-    name, new_address = args
+    name = args[0]
+    new_address = " ".join(args[1:])
     record = book.find(name)
     if record is None:
         raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")

@@ -45,11 +45,14 @@ class Contacts(Vertical):
                 if record.birthday else "—"
             )
 
+            email = record.email.value if record.email else "—"
+            address = record.address.value if record.address else "—"
+
             table.add_row(
                 record.name.value,
                 phones,
-                "—",
-                "—",
+                email,
+                address,
                 birthday
             )
 
