@@ -1,0 +1,61 @@
+/*  container */
+
+Dashboard {
+    height: auto;
+    width: 100%;
+}
+
+/* cards */
+
+Dashboard #statistics {
+    height: auto;
+    margin: 1 0;
+}
+
+Dashboard .stat-card {
+    width: 1fr;
+    height: 10;
+    background: #1e222c;
+    border: round #facc15;
+    margin-right: 2;
+    padding: 1;
+    align: center middle;
+}
+
+Dashboard .stat-number {
+    width: 100%;
+    color: #facc15;
+    text-style: bold;
+    text-align: center;
+}
+
+Dashboard .stat-label {
+    width: 100%;
+    color: #94a3b8;
+    text-align: center;
+    margin: 2 0;
+}
+
+/*  commands */
+
+Dashboard #command-list {
+    height: auto;
+    background: #1e222c;
+    border: round #343945;
+    padding: 1 2;
+}
+
+Dashboard .command-row {
+    height: 1;
+}
+
+Dashboard .command-name {
+    width: 22;
+    color: #facc15;
+    text-style: bold;
+}
+
+Dashboard .command-description {
+    width: 1fr;
+    color: #94a3b8;
+}

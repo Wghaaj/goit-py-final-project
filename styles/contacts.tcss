@@ -1,0 +1,52 @@
+Contacts {
+    height: 1fr;
+    width: 100%;
+}
+/* Search */
+
+#contact-search {
+    height: auto;
+    margin: 1 0;
+}
+
+#search-input {
+    width: 1fr;
+    border: round #343945;
+    background: #1e222c;
+}
+
+#search-input:focus {
+    border: round #facc15;
+}
+
+#search-btn {
+    width: 16;
+    margin-left: 1;
+    background: #facc15;
+    color: #101217;
+    border: round #facc15;
+}
+
+/* Contact table */
+
+#contact-table {
+    height: 1fr;
+    background: #1e222c;
+    border: round #343945;
+}
+
+#contact-table .datatable--header {
+    background: #343945;
+    color: #facc15;
+    text-style: bold;
+}
+
+#contact-table .datatable--cursor {
+    background: #facc15;
+    color: #101217;
+}
+
+#contact-total {
+    color: #94a3b8;
+    margin-top: 1;
+}

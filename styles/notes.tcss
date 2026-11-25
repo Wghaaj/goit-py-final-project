@@ -1,0 +1,86 @@
+Notes {
+    height: 1fr;
+    width: 100%;
+}
+
+/* Search */
+
+#note-search {
+    height: auto;
+    margin: 1 0;
+}
+
+#note-search-input {
+    width: 1fr;
+    background: #1e222c;
+    border: round #343945;
+}
+
+#note-search-input:focus {
+    border: round #facc15;
+}
+
+#note-search-btn {
+    width: 16;
+    margin-left: 1;
+    background: #facc15;
+    color: #101217;
+    border: round #facc15;
+}
+
+/* Table */
+
+#note-table {
+    height: 1fr;
+    background: #1e222c;
+    border: round #343945;
+}
+
+#note-table .datatable--header {
+    background: #343945;
+    color: #facc15;
+    text-style: bold;
+}
+
+#note-table .datatable--cursor {
+    background: #facc15;
+    color: #101217;
+}
+
+#note-total {
+    color: #94a3b8;
+    margin-top: 1;
+}
+
+/* Actions */
+
+#note-actions {
+    height: auto;
+    margin-top: 1;
+}
+
+#note-actions Button {
+    width: 1fr;
+    margin-right: 1;
+    background: #1e222c;
+    color: #facc15;
+    border: round #343945;
+}
+
+#note-actions Button:hover {
+    border: round #facc15;
+}
+
+#delete-note {
+    color: #f87171;
+}
+
+#note-actions #delete-note {
+    color: #f87171;
+    border: round #7f3333;
+}
+
+#note-actions #delete-note:hover {
+    background: #7f3333;
+    color: white;
+}
