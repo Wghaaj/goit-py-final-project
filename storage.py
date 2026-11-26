@@ -11,7 +11,7 @@ def save_data(book, notebook, filename="addressbook.pkl"):
         "notebook": notebook,
     }
     with open(filename, "wb") as file:
-        pickle.dump(book, file)
+        pickle.dump(payload, file)
 
 
 def load_data(filename="addressbook.pkl"):
