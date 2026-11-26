@@ -84,3 +84,29 @@ Notes {
     background: #7f3333;
     color: white;
 }
+
+EditNote {
+    align: center middle;
+    background: #101217 70%;
+}
+
+#edit-dialog {
+    width: 80;
+    height: auto;
+    padding: 2;
+    background: #1e222c;
+    border: round #facc15;
+}
+
+#edit-dialog Input {
+    margin: 1 0;
+}
+
+#edit-dialog Horizontal {
+    height: auto;
+}
+
+#edit-dialog Button {
+    width: 1fr;
+    margin-right: 1;
+}

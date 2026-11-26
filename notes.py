@@ -117,6 +117,7 @@ class Notebook(UserDict):
     def delete_note(self, note_id: int) -> None:
         self.get_note(note_id)
         del self.data[note_id]
+        self.next_id = max(self.data, default=0) + 1
 
     # --- search and tags --------------------------------------------------
 
