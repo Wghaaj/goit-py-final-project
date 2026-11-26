@@ -18,6 +18,7 @@ from contact_commands import (
     remove_address,
     change_address,
 )
+from note_commands import NOTE_COMMANDS
 from storage import load_data, save_data
 from utils import parse_input
 
@@ -26,7 +27,7 @@ init(autoreset=True)
 
 
 def main():
-    book = load_data()
+    book, notebook = load_data()
     print("Welcome to the assistant bot!")
 
     while True:
@@ -43,6 +44,8 @@ def main():
         if command == "exit":
             print("Good bye!")
             break
+        elif command in NOTE_COMMANDS:
+            print(NOTE_COMMANDS[command](args, book, notebook))
         elif command == "hello":
             print("How can I help you?")
         elif command == "add":
@@ -82,7 +85,7 @@ def main():
         elif command:
             print("Invalid command.")
 
-    save_data(book)
+    save_data(book, notebook)
 
 
 if __name__ == "__main__":
