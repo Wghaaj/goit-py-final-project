@@ -1,7 +1,7 @@
 from colorama import Fore, Style, init
 from contact_commands import (
     add_contact, change_contact, show_phone, show_all,
-    add_birthday, show_birthday, birthdays,
+    add_birthday, show_birthday, birthdays, search_contacts,
 )
 from storage import load_data, save_data
 from utils import parse_input
@@ -44,8 +44,11 @@ def main():
             print(show_birthday(args, book))
         elif command == "birthdays":
             print(birthdays(args, book))
+        elif command == "search":
+            print(search_contacts(args, book)) 
         elif command:
             print("Invalid command.")
+         
 
     save_data(book)
 

@@ -6,10 +6,12 @@ from utils import input_error
 
 @input_error
 def add_contact(args, book):
-    if len(args) != 2:
+    if len(args) < 2:
         raise ValueError(Fore.RED + "Usage: add [name] [phone]")
 
-    name, phone = args
+    name = " ".join(args[:-1])
+    phone = args[-1]
+
     record = book.find(name)
 
     if record is None:
@@ -24,10 +26,13 @@ def add_contact(args, book):
 
 @input_error
 def change_contact(args, book):
-    if len(args) != 3:
+    if len(args) < 3:
         raise ValueError(Fore.RED + "Usage: change [name] [old phone] [new phone]")
 
-    name, old_phone, new_phone = args
+    name = " ".join(args[:-2])
+    old_phone = args[-2]
+    new_phone = args[-1]
+
     record = book.find(name)
     if record is None:
         raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
@@ -38,11 +43,12 @@ def change_contact(args, book):
 
 @input_error
 def show_phone(args, book):
-    if len(args) != 1:
+    if not args:
         raise ValueError(Fore.RED + "Usage: phone [name]")
 
-    name = args[0]
+    name = " ".join(args)
     record = book.find(name)
+
     if record is None:
         raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
 
@@ -61,10 +67,12 @@ def show_all(args, book):
 
 @input_error
 def add_birthday(args, book):
-    if len(args) != 2:
+    if len(args) < 2:
         raise ValueError(Fore.RED + "Usage: add-birthday [name] [DD.MM.YYYY]")
 
-    name, birthday = args
+    name = " ".join(args[:-1])
+    birthday = args[-1]
+
     record = book.find(name)
     if record is None:
         raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
@@ -75,10 +83,10 @@ def add_birthday(args, book):
 
 @input_error
 def show_birthday(args, book):
-    if len(args) != 1:
+    if not args:
         raise ValueError(Fore.RED + "Usage: show-birthday [name]")
 
-    name = args[0]
+    name = " ".join(args)
     record = book.find(name)
     if record is None:
         raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
@@ -90,14 +98,33 @@ def show_birthday(args, book):
 
 @input_error
 def birthdays(args, book):
-    if args:
-        raise ValueError(Fore.RED + "Usage: birthdays")
+    if len(args) != 1:
+        raise ValueError("Usage: birthdays [number_of_days]")
 
-    upcoming = book.get_upcoming_birthdays()
+    try:
+        days = int(args[0])
+    except ValueError:
+        raise ValueError("The number of days must be an integer.")
+
+    upcoming = book.get_upcoming_birthdays(days)
+
     if not upcoming:
-        return Fore.GREEN + "No birthdays in the next 7 days."
+        return Fore.GREEN + f"No birthdays in the next {days} days."
 
     return "\n".join(
         f"{person['name']}: {person['congratulation_date']}"
         for person in upcoming
     )
+
+@input_error
+def search_contacts(args, book):
+    if not args:
+        raise ValueError(Fore.RED + "Usage: search [name, phone or email]")
+
+    query = " ".join(args)
+    results = book.search(query)
+
+    if not results:
+        return Fore.YELLOW + "No contacts found."
+
+    return "\n".join(str(record) for record in results)

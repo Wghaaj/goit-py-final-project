@@ -71,6 +71,7 @@ class Record:
 
 
 class AddressBook(UserDict):
+    
     def add_record(self, record):
         self.data[record.name.value] = record
 
@@ -80,7 +81,42 @@ class AddressBook(UserDict):
     def delete(self, name):
         self.data.pop(name, None)
 
-    def get_upcoming_birthdays(self):
+    def search(self, query):
+        results = []
+        query = query.strip().lower()
+
+        if not query:
+            return results
+
+        for record in self.data.values():
+            name = getattr(record, "name", None)
+            phones = getattr(record, "phones", None)
+            email = getattr(record, "email", None)
+
+            # Пошук за ім'ям
+            if name and query in name.value.lower():
+                results.append(record)
+                continue
+
+            # Пошук за телефонами
+            if phones and any(
+                query in phone.value
+                for phone in phones
+            ):
+                results.append(record)
+                continue
+
+            # Пошук за email
+            if email and query in email.value.lower():
+                results.append(record)
+                continue
+
+        return results
+
+    def get_upcoming_birthdays(self, days):
+        if not isinstance(days, int) or isinstance(days, bool) or not 1 <= days <= 365:
+            raise ValueError("The search period must be from 1 to 365 days.")
+
         today = date.today()
         upcoming = []
 
@@ -89,9 +125,12 @@ class AddressBook(UserDict):
                 continue
 
             birthday = record.birthday.value.date()
+
+            # Визначаємо найближчий день народження
             try:
                 next_birthday = birthday.replace(year=today.year)
             except ValueError:
+                # 29 лютого у невисокосний рік
                 next_birthday = birthday.replace(year=today.year, day=28)
 
             if next_birthday < today:
@@ -100,14 +139,26 @@ class AddressBook(UserDict):
                 except ValueError:
                     next_birthday = birthday.replace(year=today.year + 1, day=28)
 
-            if 0 <= (next_birthday - today).days <= 7:
-                if next_birthday.weekday() >= 5:
-                    next_birthday += timedelta(days=7 - next_birthday.weekday())
+            # Перевіряємо, чи потрапляє день народження в заданий період
+            days_until = (next_birthday - today).days
+
+            if 0 <= days_until <= days:
+                congratulation_date = next_birthday
+
+                # Переносимо привітання з вихідного на понеділок
+                if congratulation_date.weekday() >= 5:
+                    congratulation_date += timedelta(
+                        days=7 - congratulation_date.weekday()
+                    )
 
                 upcoming.append({
                     "name": record.name.value,
-                    "congratulation_date": next_birthday.strftime("%d.%m.%Y")
+                    "congratulation_date": congratulation_date.strftime("%d.%m.%Y")
                 })
-
+        upcoming.sort(
+            key=lambda person: datetime.strptime(
+                person["congratulation_date"], "%d.%m.%Y"
+            )
+        )
         return upcoming
 
