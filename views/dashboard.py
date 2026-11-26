@@ -27,11 +27,14 @@ class Dashboard(Vertical):
 
         yield Label("Available commands", classes="page-title")
 
-        with Vertical(id="command-list"):
-            for command, description in COMMANDS.items():
-                with Horizontal(classes="command-row"):
-                    yield Label(command, classes="command-name")
-                    yield Label(description, classes="command-description")
+        commands = list(COMMANDS.values())
+        middle = (len(commands) + 1) // 2
+
+        with Horizontal(id="command-list"):
+            for column in (commands[:middle], commands[middle:]):
+                with Vertical(classes="command-column"):
+                    for command in column:
+                        yield Label(command, classes="command-syntax")
 
     def on_mount(self):
         self.refresh_statistics()
@@ -45,4 +48,8 @@ class Dashboard(Vertical):
 
         self.query_one("#birthday-count", Digits).update(
             str(len(book.get_upcoming_birthdays()))
+        )
+
+        self.query_one("#note-count", Digits).update(
+            str(len(self.app.notebook))
         )

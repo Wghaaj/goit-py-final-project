@@ -123,6 +123,17 @@ Tab {
     padding: 0 1;
 }
 
+/* Command output */
+
+#command-output {
+    height: 8;
+    background: #1e222c;
+    border: round #343945;
+    margin: 0 2;
+    padding: 1 2;
+    color: #e2e8f0;
+}
+
 #command:focus {
     border: solid #fde047;
 }

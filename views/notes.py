@@ -35,3 +35,25 @@ class Notes(Vertical):
         table.add_column("Tags", width=20)
 
         table.cursor_type = "row"
+
+        self.refresh_notes()
+
+    def refresh_notes(self, notes=None):
+        table = self.query_one("#note-table", DataTable)
+        table.clear()
+
+        if notes is None:
+            notes = list(self.app.notebook.values())
+
+        for note in notes:
+            table.add_row(
+                str(note.id),
+                note.contact or "—",
+                note.text,
+                ", ".join(sorted(note.tags)) or "—",
+                key=str(note.id)
+            )
+
+        self.query_one("#note-total", Label).update(
+            f"{len(notes)} notes found"
+        )

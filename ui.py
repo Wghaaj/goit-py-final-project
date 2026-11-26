@@ -1,16 +1,17 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, TabbedContent, TabPane, Input
+from textual.widgets import Footer, TabbedContent, TabPane, Input, RichLog
 from rich.text import Text
 
 from components.header import AppHeader
 from components.command_input import CommandInput
+from components.confirmation import Confirmation
 
 from views.dashboard import Dashboard
 from views.contacts import Contacts
 from views.birthdays import Birthdays
 from views.notes import Notes
 
-from command_handler import COMMAND_HANDLERS
+from command_handler import execute_command
 from storage import load_data, save_data
 from utils import parse_input
 
@@ -25,11 +26,12 @@ class AssistantApp(App):
         "styles/birthdays.tcss",
         "styles/notes.tcss",
         "styles/command_input.tcss",
+        "styles/confirmation.tcss",
     ]
 
     def __init__(self):
         super().__init__()
-        self.book = load_data()
+        self.book, self.notebook = load_data()
 
         # Compatibility with previously saved contacts
         for record in self.book.data.values():
@@ -39,7 +41,6 @@ class AssistantApp(App):
                 record.address = None
 
     def compose(self) -> ComposeResult:
-
         yield AppHeader(id="app-header")
 
         with TabbedContent():
@@ -55,12 +56,12 @@ class AssistantApp(App):
             with TabPane("Notes"):
                 yield Notes()
 
+        yield RichLog(id="command-output", wrap=True)
         yield CommandInput()
         yield Footer()
 
-    # Execute submitted commands
+    # Handle submitted commands
     def on_input_submitted(self, event: Input.Submitted):
-
         if event.input.id != "command":
             return
 
@@ -70,33 +71,35 @@ class AssistantApp(App):
         if not command:
             return
 
+        if command in ("remove", "delete-note") and len(args) == 1:
+            self.push_screen(
+                Confirmation(),
+                lambda confirmed: self.process_command(command, args)
+                if confirmed else None
+            )
+        else:
+            self.process_command(command, args)
+
+    # Execute commands
+    def process_command(self, command, args):
+        output = self.query_one("#command-output", RichLog)
+
         if command == "exit":
-            save_data(self.book)
+            save_data(self.book, self.notebook)
             self.exit()
             return
 
         if command == "hello":
-            self.notify("How can I help you?")
+            output.write("How can I help you?")
             return
 
-        handler = COMMAND_HANDLERS.get(command)
+        result = execute_command(
+            command, args, self.book, self.notebook
+        )
 
-        if handler is None:
-            self.notify("Invalid command.", severity="error")
-            return
+        output.write(Text.from_ansi(result))
 
-        result = handler(args, self.book)
-
-        # Remove Colorama formatting
-        message = Text.from_ansi(str(result)).plain
-
-        if message.startswith("Error:"):
-            self.notify(message, severity="error")
-            return
-
-        self.notify(message)
-
-        save_data(self.book)
+        save_data(self.book, self.notebook)
         self.refresh_views()
 
     # Refresh displayed data
@@ -104,6 +107,7 @@ class AssistantApp(App):
         self.query_one(Dashboard).refresh_statistics()
         self.query_one(Contacts).refresh_contacts()
         self.query_one(Birthdays).refresh_birthdays()
+        self.query_one(Notes).refresh_notes()
 
 
 if __name__ == "__main__":
