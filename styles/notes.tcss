@@ -1,0 +1,39 @@
+/* Note search layout */
+
+#note-search-input {
+    width: 1fr;
+}
+
+/* Note actions */
+
+#note-actions {
+    height: auto;
+    margin-top: 1;
+}
+
+#note-actions Button {
+    width: 1fr;
+    margin-right: 1;
+}
+
+/* Delete button */
+
+#note-actions #delete-note {
+    color: #f87171;
+    border: round #7f3333;
+}
+
+#note-actions #delete-note:hover {
+    background: #7f3333;
+    color: white;
+}
+
+/* Note editor */
+
+#edit-dialog {
+    width: 80;
+}
+
+#edit-dialog Input {
+    margin: 1 0;
+}

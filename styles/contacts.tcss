@@ -1,0 +1,5 @@
+/* Contact search layout */
+
+#search-input {
+    width: 1fr;
+}

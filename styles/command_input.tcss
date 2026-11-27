@@ -1,0 +1,35 @@
+CommandInput {
+    height: auto;
+    width: 100%;
+}
+
+/* Command input field */
+
+#command {
+    background: #1e222c;
+    border: solid #facc15;
+    margin: 1 2;
+    padding: 0 1;
+}
+
+#command:focus {
+    border: solid #fde047;
+}
+
+/* Command syntax suggestions */
+
+#command-suggestions {
+    display: none;
+    height: auto;
+    max-height: 8;
+    overflow-y: auto;
+    background: #1e222c;
+    border: round #343945;
+    color: #facc15;
+    margin: 0 2;
+    padding: 1 2;
+}
+
+#command .input--suggestion {
+    color: #94a3b8;
+}

@@ -1,0 +1,9 @@
+/* Confirmation dialog layout */
+
+#confirmation {
+    width: 60;
+}
+
+#confirmation Horizontal {
+    margin-top: 1;
+}

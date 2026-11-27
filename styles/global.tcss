@@ -1,0 +1,182 @@
+/* Application theme */
+
+Screen {
+    background: #101217;
+    color: #e2e8f0;
+}
+
+/* Header */
+
+#app-header {
+    height: auto;
+    background: #1e222c;
+    padding: 1 2;
+    margin-bottom: 1;
+    align: center middle;
+}
+
+#app-title {
+    width: 100%;
+    text-align: center;
+    text-style: bold;
+    color: #facc15;
+}
+
+#app-subtitle {
+    width: 100%;
+    text-align: center;
+    color: #94a3b8;
+}
+
+/* Navigation */
+
+TabbedContent {
+    height: 1fr;
+    margin: 0 2;
+}
+
+Tabs {
+    height: 4;
+}
+
+Tab {
+    width: 20;
+    height: 3;
+    padding: 0 3;
+    margin-right: 1;
+    color: #94a3b8;
+    background: #1e222c;
+    border: round #facc15;
+    content-align: center middle;
+}
+
+Tab.-active {
+    background: #facc15;
+    color: #101217;
+    text-style: bold;
+}
+
+TabPane {
+    height: 1fr;
+    width: 100%;
+    padding: 1 2;
+    overflow-y: auto;
+}
+
+Underline {
+    visibility: hidden;
+}
+
+/* Shared page layouts */
+
+Contacts, Birthdays, Notes {
+    height: 1fr;
+    width: 100%;
+}
+
+.page-title {
+    color: #facc15;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+/* Shared search controls */
+
+#contact-search, #birthday-search, #note-search {
+    height: auto;
+    margin: 1 0;
+}
+
+#search-input, #birthday-days, #note-search-input {
+    background: #1e222c;
+    border: round #343945;
+}
+
+#search-input:focus, #birthday-days:focus, #note-search-input:focus {
+    border: round #facc15;
+}
+
+#search-btn, #birthday-search-btn, #note-search-btn {
+    width: 16;
+    margin-left: 1;
+    background: #facc15;
+    color: #101217;
+    border: round #facc15;
+}
+
+/* Shared table styling */
+
+DataTable {
+    height: 1fr;
+    background: #1e222c;
+    border: round #343945;
+}
+
+DataTable .datatable--header {
+    background: #343945;
+    color: #facc15;
+    text-style: bold;
+}
+
+DataTable .datatable--cursor {
+    background: #facc15;
+    color: #101217;
+}
+
+#contact-total, #birthday-total, #note-total {
+    color: #94a3b8;
+    margin-top: 1;
+}
+
+/* Buttons */
+
+Button {
+    border: round #343945;
+    background: #1e222c;
+    color: #facc15;
+}
+
+Button:hover {
+    border: round #facc15;
+}
+
+/* Shared modal styling */
+
+Confirmation, EditNote {
+    align: center middle;
+    background: #101217 70%;
+}
+
+#confirmation, #edit-dialog {
+    height: auto;
+    padding: 2;
+    background: #1e222c;
+    border: round #facc15;
+}
+
+#confirmation Horizontal, #edit-dialog Horizontal {
+    height: auto;
+}
+
+#confirmation Button, #edit-dialog Button {
+    width: 1fr;
+    margin-right: 1;
+}
+
+/* Command output */
+
+#command-output {
+    height: 8;
+    background: #1e222c;
+    border: round #343945;
+    margin: 0 2;
+    padding: 1 2;
+    color: #e2e8f0;
+}
+
+/* Footer */
+
+Footer {
+    background: #1e222c;
+    color: #94a3b8;
+}

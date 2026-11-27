@@ -1,0 +1,17 @@
+/* Birthday search layout */
+
+#birthday-search {
+    align-vertical: middle;
+}
+
+#birthday-search Label {
+    margin: 0 1;
+}
+
+#birthday-days {
+    width: 10;
+}
+
+#birthday-search-btn {
+    margin-left: 2;
+}
