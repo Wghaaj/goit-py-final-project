@@ -77,7 +77,7 @@ class Notes(Vertical):
             self.edit_selected_note(note_id)
         elif button == "delete-note":
             self.app.push_screen(
-                Confirmation(),
+                Confirmation(f"Are you sure you want to delete note #{note_id}?"),
                 lambda confirmed: self.app.process_command(
                     "delete-note", [note_id]
                 ) if confirmed else None,
@@ -91,3 +91,8 @@ class Notes(Vertical):
                 "edit-note", [note_id, text]
             ) if text is not None else None,
         )
+
+    def on_input_submitted(self, event: Input.Submitted):
+        if event.input.id == "note-search-input":
+            self.search_notes()
+            event.stop()

@@ -5,9 +5,13 @@ from textual.widgets import Label, Button
 
 class Confirmation(ModalScreen):
 
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
+
     def compose(self):
         with Vertical(id="confirmation"):
-            yield Label("Are you sure you want to delete this item?")
+            yield Label(self.message, markup=False)
 
             with Horizontal():
                 yield Button("Cancel", id="cancel")
