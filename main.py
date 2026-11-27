@@ -17,6 +17,7 @@ from contact_commands import (
     add_address,
     remove_address,
     change_address,
+    search_contacts,
 )
 from note_commands import NOTE_COMMANDS
 from storage import load_data, save_data

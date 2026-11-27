@@ -22,11 +22,10 @@ def change_name(args, book):
 
 @input_error
 def add_contact(args, book):
-    if len(args) < 2:
+    if len(args) != 2:
         raise ValueError(Fore.RED + "Usage: add [name] [phone]")
 
-    name = " ".join(args[:-1])
-    phone = args[-1]
+    name, phone = args
 
     record = book.find(name)
 
@@ -56,12 +55,12 @@ def remove_contact(args, book):
 
 @input_error
 def change_contact(args, book):
-    if len(args) < 3:
-        raise ValueError(Fore.RED + "Usage: change [name] [old phone] [new phone]")
+    if len(args) != 3:
+        raise ValueError(
+        Fore.RED + "Usage: change [name] [old phone] [new phone]"
+    )
 
-    name = " ".join(args[:-2])
-    old_phone = args[-2]
-    new_phone = args[-1]
+    name, old_phone, new_phone = args
 
     record = book.find(name)
     if record is None:
@@ -99,11 +98,12 @@ def show_all(args, book):
 
 @input_error
 def add_birthday(args, book):
-    if len(args) < 2:
-        raise ValueError(Fore.RED + "Usage: add-birthday [name] [DD.MM.YYYY]")
+    if len(args) != 2:
+        raise ValueError(
+            Fore.RED + "Usage: add-birthday [name] [DD.MM.YYYY]"
+        )
 
-    name = " ".join(args[:-1])
-    birthday = args[-1]
+    name, birthday = args
 
     record = book.find(name)
     if record is None:
@@ -158,13 +158,16 @@ def show_birthday(args, book):
 
 @input_error
 def birthdays(args, book):
-    if len(args) != 1:
+    if len(args) > 1:
         raise ValueError("Usage: birthdays [number_of_days]")
 
-    try:
-        days = int(args[0])
-    except ValueError:
-        raise ValueError("The number of days must be an integer.")
+    if args:
+        try:
+            days = int(args[0])
+        except ValueError:
+            raise ValueError("The number of days must be an integer.")
+    else:
+        days = 7
 
     upcoming = book.get_upcoming_birthdays(days)
 
@@ -172,7 +175,8 @@ def birthdays(args, book):
         return Fore.GREEN + f"No birthdays in the next {days} days."
 
     return "\n".join(
-        f"{person['name']}: {person['congratulation_date']}" for person in upcoming
+        f"{person['name']}: {person['congratulation_date']}"
+        for person in upcoming
     )
 
 
