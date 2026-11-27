@@ -1,22 +1,9 @@
-Confirmation {
-    align: center middle;
-    background: #101217 70%;
-}
+/* Confirmation dialog layout */
 
 #confirmation {
     width: 60;
-    height: auto;
-    padding: 2;
-    background: #1e222c;
-    border: round #facc15;
 }
 
 #confirmation Horizontal {
-    height: auto;
     margin-top: 1;
-}
-
-#confirmation Button {
-    width: 1fr;
-    margin-right: 1;
 }

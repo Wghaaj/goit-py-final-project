@@ -5,20 +5,17 @@ from models import Record
 from utils import input_error
 
 
-@input_error
-def change_name(args, book):
-    if len(args) != 2:
-        raise ValueError(Fore.RED + "Usage: change-name [old_name] [new_name]")
+def get_contact(book, name):
+    """Find a contact or raise an error if it does not exist."""
+    record = book.find(name)
 
-    old_name, new_name = args
-    record = book.find(old_name)
     if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{old_name}' not found.")
-    book.edit_name(old_name, new_name)
-    if old_name == new_name:
-        return Fore.YELLOW + "Name is already the same."
-    return Fore.GREEN + "Contact name updated."
+        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
 
+    return record
+
+
+# Contact management
 
 @input_error
 def add_contact(args, book):
@@ -26,9 +23,9 @@ def add_contact(args, book):
         raise ValueError(Fore.RED + "Usage: add [name] [phone]")
 
     name, phone = args
-
     record = book.find(name)
 
+    # Create a new contact or add a phone to an existing one.
     if record is None:
         record = Record(name)
         record.add_phone(phone)
@@ -40,224 +37,42 @@ def add_contact(args, book):
 
 
 @input_error
+def change_name(args, book):
+    if len(args) != 2:
+        raise ValueError(Fore.RED + "Usage: change-name [old_name] [new_name]")
+
+    old_name, new_name = args
+    get_contact(book, old_name)
+
+    if old_name == new_name:
+        return Fore.YELLOW + "Name is already the same."
+
+    book.edit_name(old_name, new_name)
+    return Fore.GREEN + "Contact name updated."
+
+
+@input_error
 def remove_contact(args, book):
     if len(args) != 1:
         raise ValueError(Fore.RED + "Usage: remove [name]")
 
     name = args[0]
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
+    get_contact(book, name)
     book.delete(name)
+
     return Fore.GREEN + "Contact removed."
-
-
-@input_error
-def change_contact(args, book):
-    if len(args) != 3:
-        raise ValueError(
-        Fore.RED + "Usage: change [name] [old phone] [new phone]"
-    )
-
-    name, old_phone, new_phone = args
-
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
-    record.edit_phone(old_phone, new_phone)
-    return Fore.GREEN + "Contact updated."
-
-
-@input_error
-def show_phone(args, book):
-    if not args:
-        raise ValueError(Fore.RED + "Usage: phone [name]")
-
-    name = " ".join(args)
-    record = book.find(name)
-
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
-    return (
-        Fore.GREEN + "; ".join(str(phone) for phone in record.phones)
-        or Fore.YELLOW + "No phone numbers saved."
-    )
 
 
 @input_error
 def show_all(args, book):
     if args:
         raise ValueError(Fore.RED + "Usage: all")
-    if not book.data:
-        return Fore.GREEN + "Address book is empty."
-    return "\n".join(str(record) for record in book.data.values())
 
+    if not book:
+        return Fore.YELLOW + "Address book is empty."
 
-@input_error
-def add_birthday(args, book):
-    if len(args) != 2:
-        raise ValueError(
-            Fore.RED + "Usage: add-birthday [name] [DD.MM.YYYY]"
-        )
+    return "\n".join(str(record) for record in book.values())
 
-    name, birthday = args
-
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
-    record.add_birthday(birthday)
-    return Fore.GREEN + "Birthday added."
-
-
-@input_error
-def remove_birthday(args, book):
-    if len(args) != 1:
-        raise ValueError(Fore.RED + "Usage: remove-birthday [name]")
-
-    name = args[0]
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
-    record.remove_birthday()
-    return Fore.GREEN + "Birthday removed."
-
-
-@input_error
-def change_birthday(args, book):
-    if len(args) != 2:
-        raise ValueError(Fore.RED + "Usage: change-birthday [name] [DD.MM.YYYY]")
-
-    name, new_birthday = args
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
-    record.edit_birthday(new_birthday)
-    return Fore.GREEN + "Birthday updated."
-
-
-@input_error
-def show_birthday(args, book):
-    if not args:
-        raise ValueError(Fore.RED + "Usage: show-birthday [name]")
-
-    name = " ".join(args)
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-    if record.birthday is None:
-        return Fore.YELLOW + "Birthday not set."
-
-    return record.birthday.value.strftime("%d.%m.%Y")
-
-
-@input_error
-def birthdays(args, book):
-    if len(args) > 1:
-        raise ValueError("Usage: birthdays [number_of_days]")
-
-    if args:
-        try:
-            days = int(args[0])
-        except ValueError:
-            raise ValueError("The number of days must be an integer.")
-    else:
-        days = 7
-
-    upcoming = book.get_upcoming_birthdays(days)
-
-    if not upcoming:
-        return Fore.GREEN + f"No birthdays in the next {days} days."
-
-    return "\n".join(
-        f"{person['name']}: {person['congratulation_date']}"
-        for person in upcoming
-    )
-
-
-@input_error
-def add_email(args, book):
-    if len(args) != 2:
-        raise ValueError(Fore.RED + "Usage: add-email [name] [email@gmail.com]")
-
-    name, email = args
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-    record.add_email(email)
-    return Fore.GREEN + "Email added"
-
-
-@input_error
-def change_email(args, book):
-    if len(args) != 2:
-        raise ValueError(Fore.RED + "Usage: [name] [new_email('email@gmail.com')]")
-
-    name, new_email = args
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-    record.edit_email(new_email)
-    return Fore.GREEN + "Email changed"
-
-
-@input_error
-def remove_email(args, book):
-    if len(args) != 1:
-        raise ValueError(Fore.RED + "Usage: remove-email [name]")
-
-    name = args[0]
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-    record.remove_email()
-    return Fore.GREEN + "Email removed"
-
-
-@input_error
-def add_address(args, book):
-    if len(args) < 2:
-        raise ValueError(Fore.RED + "Usage: add-address [name] [address]")
-
-    name = args[0]
-    address = " ".join(args[1:])
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-
-    record.add_address(address)
-    return Fore.GREEN + "Address added."
-
-
-@input_error
-def remove_address(args, book):
-    if len(args) != 1:
-        raise ValueError(Fore.RED + "Usage: remove-address [name]")
-    name = args[0]
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-    record.remove_address()
-    return Fore.GREEN + "Address removed"
-
-
-@input_error
-def change_address(args, book):
-    if len(args) < 2:
-        raise ValueError(Fore.RED + "Usage: change-address [name] [new address]")
-
-    name = args[0]
-    new_address = " ".join(args[1:])
-    record = book.find(name)
-    if record is None:
-        raise ValueError(Fore.MAGENTA + f"Contact '{name}' not found.")
-    record.edit_address(new_address)
-    return Fore.GREEN + "Address updated"
 
 @input_error
 def search_contacts(args, book):
@@ -271,3 +86,185 @@ def search_contacts(args, book):
         return Fore.YELLOW + "No contacts found."
 
     return "\n".join(str(record) for record in results)
+
+
+# Phone management
+
+@input_error
+def change_contact(args, book):
+    if len(args) != 3:
+        raise ValueError(
+            Fore.RED + "Usage: change [name] [old phone] [new phone]"
+        )
+
+    name, old_phone, new_phone = args
+    record = get_contact(book, name)
+    record.edit_phone(old_phone, new_phone)
+
+    return Fore.GREEN + "Contact updated."
+
+
+@input_error
+def show_phone(args, book):
+    if not args:
+        raise ValueError(Fore.RED + "Usage: phone [name]")
+
+    name = " ".join(args)
+    record = get_contact(book, name)
+
+    if not record.phones:
+        return Fore.YELLOW + "No phone numbers saved."
+
+    return Fore.GREEN + "; ".join(str(phone) for phone in record.phones)
+
+
+# Birthday management
+
+@input_error
+def add_birthday(args, book):
+    if len(args) != 2:
+        raise ValueError(Fore.RED + "Usage: add-birthday [name] [DD.MM.YYYY]")
+
+    name, birthday = args
+    record = get_contact(book, name)
+    record.add_birthday(birthday)
+
+    return Fore.GREEN + "Birthday added."
+
+
+@input_error
+def change_birthday(args, book):
+    if len(args) != 2:
+        raise ValueError(Fore.RED + "Usage: change-birthday [name] [DD.MM.YYYY]")
+
+    name, new_birthday = args
+    record = get_contact(book, name)
+    record.edit_birthday(new_birthday)
+
+    return Fore.GREEN + "Birthday updated."
+
+
+@input_error
+def remove_birthday(args, book):
+    if len(args) != 1:
+        raise ValueError(Fore.RED + "Usage: remove-birthday [name]")
+
+    record = get_contact(book, args[0])
+    record.remove_birthday()
+
+    return Fore.GREEN + "Birthday removed."
+
+
+@input_error
+def show_birthday(args, book):
+    if not args:
+        raise ValueError(Fore.RED + "Usage: show-birthday [name]")
+
+    name = " ".join(args)
+    record = get_contact(book, name)
+
+    if record.birthday is None:
+        return Fore.YELLOW + "Birthday not set."
+
+    return record.birthday.value.strftime("%d.%m.%Y")
+
+
+@input_error
+def birthdays(args, book):
+    if len(args) > 1:
+        raise ValueError("Usage: birthdays [number_of_days]")
+
+    # Use a seven-day period unless the user specifies another one.
+    try:
+        days = int(args[0]) if args else 7
+    except ValueError:
+        raise ValueError("The number of days must be an integer.")
+
+    upcoming = book.get_upcoming_birthdays(days)
+
+    if not upcoming:
+        return Fore.GREEN + f"No birthdays in the next {days} days."
+
+    return "\n".join(
+        f"{person['name']}: {person['congratulation_date']}"
+        for person in upcoming
+    )
+
+
+# Email management
+
+@input_error
+def add_email(args, book):
+    if len(args) != 2:
+        raise ValueError(Fore.RED + "Usage: add-email [name] [email]")
+
+    name, email = args
+    record = get_contact(book, name)
+    record.add_email(email)
+
+    return Fore.GREEN + "Email added."
+
+
+@input_error
+def change_email(args, book):
+    if len(args) != 2:
+        raise ValueError(Fore.RED + "Usage: change-email [name] [new_email]")
+
+    name, new_email = args
+    record = get_contact(book, name)
+    record.edit_email(new_email)
+
+    return Fore.GREEN + "Email updated."
+
+
+@input_error
+def remove_email(args, book):
+    if len(args) != 1:
+        raise ValueError(Fore.RED + "Usage: remove-email [name]")
+
+    record = get_contact(book, args[0])
+    record.remove_email()
+
+    return Fore.GREEN + "Email removed."
+
+
+# Address management
+
+@input_error
+def add_address(args, book):
+    if len(args) < 2:
+        raise ValueError(Fore.RED + "Usage: add-address [name] [address]")
+
+    name = args[0]
+
+    # Combine the remaining arguments into a single address.
+    address = " ".join(args[1:])
+
+    record = get_contact(book, name)
+    record.add_address(address)
+
+    return Fore.GREEN + "Address added."
+
+
+@input_error
+def change_address(args, book):
+    if len(args) < 2:
+        raise ValueError(Fore.RED + "Usage: change-address [name] [new address]")
+
+    name = args[0]
+    new_address = " ".join(args[1:])
+    record = get_contact(book, name)
+    record.edit_address(new_address)
+
+    return Fore.GREEN + "Address updated."
+
+
+@input_error
+def remove_address(args, book):
+    if len(args) != 1:
+        raise ValueError(Fore.RED + "Usage: remove-address [name]")
+
+    record = get_contact(book, args[0])
+    record.remove_address()
+
+    return Fore.GREEN + "Address removed."

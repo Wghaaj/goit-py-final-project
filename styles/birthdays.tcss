@@ -1,13 +1,6 @@
-Birthdays {
-    height: 1fr;
-    width: 100%;
-}
-
-/* Search */
+/* Birthday search layout */
 
 #birthday-search {
-    height: auto;
-    margin: 1 0;
     align-vertical: middle;
 }
 
@@ -17,42 +10,8 @@ Birthdays {
 
 #birthday-days {
     width: 10;
-    background: #1e222c;
-    border: round #343945;
-}
-
-#birthday-days:focus {
-    border: round #facc15;
 }
 
 #birthday-search-btn {
-    width: 16;
     margin-left: 2;
-    background: #facc15;
-    color: #101217;
-    border: round #facc15;
-}
-
-/* Table */
-
-#birthday-table {
-    height: 1fr;
-    background: #1e222c;
-    border: round #343945;
-}
-
-#birthday-table .datatable--header {
-    background: #343945;
-    color: #facc15;
-    text-style: bold;
-}
-
-#birthday-table .datatable--cursor {
-    background: #facc15;
-    color: #101217;
-}
-
-#birthday-total {
-    color: #94a3b8;
-    margin-top: 1;
 }

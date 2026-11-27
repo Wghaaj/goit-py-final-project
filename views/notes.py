@@ -1,3 +1,5 @@
+"""Notes view with search, editing and deletion functionality."""
+
 from textual.containers import Vertical, Horizontal
 from textual.widgets import Label, Input, Button, DataTable
 
@@ -25,19 +27,24 @@ class Notes(Vertical):
     def on_mount(self):
         table = self.query_one("#note-table", DataTable)
         table.zebra_stripes = True
+        table.cursor_type = "row"
+
         table.add_column("ID", width=6)
         table.add_column("Contact", width=20)
         table.add_column("Note", width=45)
         table.add_column("Tags", width=20)
-        table.cursor_type = "row"
+
         self.refresh_notes()
 
     def refresh_notes(self, notes=None):
         table = self.query_one("#note-table", DataTable)
         table.clear()
 
+        # Preserve the search filter when refreshing the table.
         if notes is None:
-            notes = list(self.app.notebook.values())
+            query = self.query_one("#note-search-input", Input).value.strip()
+            notebook = self.app.notebook
+            notes = notebook.search(query) if query else list(notebook.values())
 
         for note in notes:
             table.add_row(
@@ -52,39 +59,40 @@ class Notes(Vertical):
             f"{len(notes)} notes found"
         )
 
-    def search_notes(self):
-        query = self.query_one("#note-search-input", Input).value.strip()
-        results = self.app.notebook.search(query) if query else None
-        self.refresh_notes(results)
+    def on_input_submitted(self, event: Input.Submitted):
+        if event.input.id == "note-search-input":
+            self.refresh_notes()
+            event.stop()
 
     def on_button_pressed(self, event: Button.Pressed):
         button = event.button.id
 
         if button == "note-search-btn":
-            self.search_notes()
+            self.refresh_notes()
             return
 
         table = self.query_one("#note-table", DataTable)
+
         if not table.row_count:
             self.app.notify("No note selected.", severity="warning")
             return
 
+        # Retrieve the ID of the currently selected note.
         note_id = str(table.get_row_at(table.cursor_row)[0])
 
         if button == "view-note":
             self.app.process_command("show-note", [note_id])
+
         elif button == "edit-note":
             self.edit_selected_note(note_id)
+
         elif button == "delete-note":
-            self.app.push_screen(
-                Confirmation(f"Are you sure you want to delete note #{note_id}?"),
-                lambda confirmed: self.app.process_command(
-                    "delete-note", [note_id]
-                ) if confirmed else None,
-            )
+            self.delete_selected_note(note_id)
 
     def edit_selected_note(self, note_id):
         note = self.app.notebook.get_note(int(note_id))
+
+        # Open the editor with the existing note text.
         self.app.push_screen(
             EditNote(note.text),
             lambda text: self.app.process_command(
@@ -92,7 +100,11 @@ class Notes(Vertical):
             ) if text is not None else None,
         )
 
-    def on_input_submitted(self, event: Input.Submitted):
-        if event.input.id == "note-search-input":
-            self.search_notes()
-            event.stop()
+    def delete_selected_note(self, note_id):
+        # Delete the note only after user confirmation.
+        self.app.push_screen(
+            Confirmation(f"Are you sure you want to delete note #{note_id}?"),
+            lambda confirmed: self.app.process_command(
+                "delete-note", [note_id]
+            ) if confirmed else None,
+        )

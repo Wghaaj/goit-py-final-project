@@ -1,3 +1,5 @@
+"""Command syntax for the dashboard and input suggestions."""
+
 COMMANDS = {
     # Contacts
     "hello": "hello",
@@ -7,6 +9,7 @@ COMMANDS = {
     "change": "change [name] [old phone] [new phone]",
     "phone": "phone [name]",
     "all": "all",
+    "search": "search [name, phone or email]",
 
     # Email
     "add-email": "add-email [name] [email]",
@@ -23,7 +26,7 @@ COMMANDS = {
     "change-birthday": "change-birthday [name] [DD.MM.YYYY]",
     "remove-birthday": "remove-birthday [name]",
     "show-birthday": "show-birthday [name]",
-    "birthdays": "birthdays",
+    "birthdays": "birthdays [days]",
 
     # Notes
     "add-note": "add-note [text]",
@@ -44,5 +47,6 @@ COMMANDS = {
     "unlink-note": "unlink-note [id]",
     "contact-notes": "contact-notes [name]",
 
+    # Application
     "exit": "exit",
 }

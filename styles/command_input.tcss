@@ -3,6 +3,8 @@ CommandInput {
     width: 100%;
 }
 
+/* Command input field */
+
 #command {
     background: #1e222c;
     border: solid #facc15;
@@ -13,6 +15,8 @@ CommandInput {
 #command:focus {
     border: solid #fde047;
 }
+
+/* Command syntax suggestions */
 
 #command-suggestions {
     display: none;
